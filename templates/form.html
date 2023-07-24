@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Application Form</title>
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #007BFF;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F1F1F1;
+        }
+
+        .update-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .update-btn:hover {
+            background-color: #0056b3;
+        }
+   
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            display: none;
+            background-color: #ffffff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+        }
+
+        .form-container.show {
+            display: block;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            background-color: #0f0fc9;
+            transition: background-color 0.3s;
+        }
+
+        .button1 {
+            border-radius: 10px 0 0 0;
+        }
+
+        .button2 {
+            border-radius: 0 10px 0 0;
+        }
+
+        .button-group button:hover {
+            background-color: #09098e;
+            /* Apply hover effect with a darker shade of blue */
+        }
+
+        .button-group button:active {
+            background-color: #080872;
+            /* Apply active effect with an even darker shade of blue */
+        }
+
+        .button1.selected {
+            background-color: #080872;
+            /* Slightly darker shade when selected */
+        }
+
+        .button2.selected {
+            background-color: #080872;
+            /* Slightly darker shade when selected */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            margin-right: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"] {
+            background-color: #0f0fc9;
+            /* Keep the same shade of blue */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #09098e;
+            /* Apply hover effect with a darker shade of blue */
+        }
+
+        .form-group input[type="submit"].button1.selected,
+        .form-group input[type="submit"].button2.selected {
+            background-color: #080872;
+            /* Apply active effect with an even darker shade of blue */
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .all-applicants-container {
+            display: none;
+        }
+
+        .all-applicants-container.show {
+            display: block;
+            background-color: #ffffff;
+            /* Change background color to white */
+            border-radius: 10px;
+            /* Apply border-radius to round the corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            /* Match the width to the application form box */
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main">
+        <div class="button-group">
+            <button onclick="openNewApplicationModal()" class="button1 selected">Create New Application</button>
+            <button onclick="submitGetAllApplicationsForm()" class="button2">View All Applications</button>
+        </div>
+
+        <div>
+            <div class="form-container show">
+
+                <h1>Application Form</h1>
+                <form action="/submit" method="POST">
+                    <div class="form-group">
+                        <label for="appname">App Name:</label>
+                        <input type="text" id="appname" name="appname" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appdetails">App Description:</label>
+                        <input type="text" id="appdetails" name="appdetails" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientname">Client Name:</label>
+                        <input type="text" id="clientname" name="clientname" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientaddress">Client Address:</label>
+                        <input type="text" id="clientaddress" name="clientaddress" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientproperty">Client Property:</label>
+                        <input type="text" id="clientproperty" name="clientproperty" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientcellno">Client CellNo:</label>
+                        <input type="number" id="clientcellno" name="clientcellno" required>
+                    </div>
+
+                    <div class="form-group" style="margin-right: 0;">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+
+            <div class="all-applicants-container">
+                <h1>Data from Database</h1>
+                <table>
+                    <tr>
+                        <th>App ID</th>
+                        <th>App Name</th>
+                        <th>App Details</th>
+                        <th>Client Name</th>
+                        <th>Client Address</th>
+                        <th>Client Property</th>
+                        <th>Client CellNo</th>
+                        <th>Created Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                        <td>{{ row[6] }}</td>
+                        <td>{{ row[8] }}</td>
+                        <td>{% if row[7] == "0" or row[7] is none %}Pending{% else %}Approved{% endif %}</td>
+                        <!-- <td><button class="update-btn" data-id="{{ row[0] }}">Update Status</button></td> -->
+
+                        <td><button class="update-btn" data-id="{{ row[0] }}"
+                                onclick="updateStatusAndSendEmail({{row[0]}})">Update
+                                Status</button></td>
+
+                    </tr>
+                    {% endfor %}
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const buttons = document.querySelectorAll('.update-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                updateStatus(id);
+            });
+        });
+
+        function updateStatus(id) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/update_status', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Optionally, you can update the status cell in the table without reloading the page.
+                        // You can do this by modifying the DOM.
+                        // In this example, the server will send back the updated status, so we can directly update it.
+                        const response = JSON.parse(xhr.responseText);
+                        const statusCell = document.querySelector(`[data-id="${id}"]`).parentNode.previousElementSibling;
+                        console.log("p", document.querySelector(`[data-id="${id}"]`).parentNode);
+                        console.log("statusCell", statusCell);
+                        console.log("response", response);
+
+                        statusCell.textContent = response.new_status;
+                    } else {
+                        alert('Failed to update status.');
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ id: id }));
+        }
+    </script>
+
+
+    <script>
+        /* ... Rest of the JavaScript code ... */
+
+        function submitGetAllApplicationsForm() {
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = '/getdata';
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+
+    <script>
+        function openNewApplicationModal() {
+            // Display the application form content
+            document.querySelector(".form-container").classList.add("show");
+            document.querySelector(".all-applicants-container").classList.remove("show");
+
+            // Update button styles to keep the "Create New Application" button selected
+            document.querySelector(".button1").classList.add("selected");
+            document.querySelector(".button2").classList.remove("selected");
+        }
+
+        function openAllApplicationsModal() {
+            // Display the content for "View All Applications"
+            document.querySelector(".form-container").classList.remove("show");
+            document.querySelector(".all-applicants-container").classList.add("show");
+
+            // Update button styles to keep the "View All Applications" button selected
+            document.querySelector(".button1").classList.remove("selected");
+            document.querySelector(".button2").classList.add("selected");
+        }
+    </script>
+</body>
+
+</html>

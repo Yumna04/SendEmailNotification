@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data from Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #007BFF;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F1F1F1;
+        }
+
+        .update-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .update-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.back-button:active {
+    background-color: #003d80;
+}
+
+    </style>
+</head>
+
+<body>
+    <h1>Data from Database</h1>
+    <div>
+        <a href="{{ url_for('go_back') }}" class="back-button">Back</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>App ID</th>
+            <th>App Name</th>
+            <th>App Details</th>
+            <th>Client Name</th>
+            <th>Client Address</th>
+            <th>Client Property</th>
+            <th>Client CellNo</th>
+            <th>Created Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+            <td>{{ row[5] }}</td>
+            <td>{{ row[6] }}</td>
+            <td>{{ row[8] }}</td>
+            <td>{% if row[7] == "0" or row[7] is none %}Pending{% else %}Approved{% endif %}</td>
+            <!-- <td><button class="update-btn" data-id="{{ row[0] }}">Update Status</button></td> -->
+
+            <td><button class="update-btn" data-id="{{ row[0] }}" onclick="updateStatusAndSendEmail({{row[0]}})">Update
+                    Status</button></td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        const buttons = document.querySelectorAll('.update-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+
+                const id = button.dataset.id;
+                
+                updateStatus(id);
+            });
+        });
+
+        function updateStatus(id) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/update_status', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Optionally, you can update the status cell in the table without reloading the page.
+                        // You can do this by modifying the DOM.
+                        // In this example, the server will send back the updated status, so we can directly update it.
+                        const response = JSON.parse(xhr.responseText);
+                        const statusCell = document.querySelector(`[data-id="${id}"]`).parentNode.previousElementSibling;
+                        console.log("p", document.querySelector(`[data-id="${id}"]`).parentNode);
+                        console.log("statusCell", statusCell);
+                        console.log("response", response);
+
+                        statusCell.textContent = response.new_status;
+                    } else {
+                        alert('Failed to update status.');
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ id: id }));
+        }
+    </script>
+
+</body>
+
+</html>
